@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mora en Argentina · Trabajo final</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f2efe9;--paper:#fff;--ink:#171717;--muted:#666;--line:#ddd7ce;--accent:#6d28d9;--soft:#f3eefc;--gray:#9a9a9a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+main{max-width:1180px;margin:auto;padding:42px 24px 72px}
+.kicker{font-size:13px;text-transform:uppercase;letter-spacing:.13em;font-weight:700;color:var(--accent);margin-bottom:10px}
+h1{font-size:48px;line-height:1.02;letter-spacing:-1.5px;margin:0 0 14px;max-width:1020px}
+.lead{font-size:20px;line-height:1.5;color:#4c4c4c;max-width:960px;margin:0}
+.storymap{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:26px 0 10px}
+.step{border:1px solid var(--line);background:#faf9f6;border-radius:14px;padding:14px;min-height:112px;font-size:13px;line-height:1.35}
+.step b{display:block;font-size:15px;margin-bottom:5px} .step.active{background:var(--soft);border-color:#c8b4f0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;margin-top:22px}
+.sectionno{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+h2{font-size:33px;line-height:1.12;letter-spacing:-.5px;margin:0 0 8px}
+.sub{font-size:16px;line-height:1.5;color:#5f5f5f;margin:0 0 18px}
+.chart{height:320px}
+.insight{margin-top:18px;background:var(--soft);border-left:4px solid var(--accent);border-radius:0 14px 14px 0;padding:18px 20px;font-size:20px;line-height:1.5}
+.question{font-size:24px;line-height:1.4;margin:0}
+.placeholder{opacity:.56;border-style:dashed}
+.placeholder h3{margin:0 0 8px;font-size:21px} .placeholder p{margin:0;color:#666;line-height:1.5}
+.note{font-size:13px;color:#6d6d6d;line-height:1.55;margin-top:12px}
+@media(max-width:850px){.storymap{grid-template-columns:repeat(2,1fr)}h1{font-size:37px}}
+
+.bigstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.bigstats div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.bigstats b{display:block;font-size:30px;color:#6d28d9}.bigstats span{font-size:13px;color:#6f6963}
+.sourceEmbed{height:500px;overflow:hidden;border:1px solid #e7e2da;border-radius:14px;margin:18px 0;background:white}
+.sourceEmbed iframe{width:100%;height:100%;border:0}
+.causalFlow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.causalFlow div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.causalFlow span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:7px}
+.causalFlow b{display:block;font-size:17px;margin-bottom:6px}.causalFlow small{color:#6f6963;line-height:1.4}
+@media(max-width:760px){.bigstats,.causalFlow{grid-template-columns:1fr}}
+
+.demandStrip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 22px}
+.demandStrip div,.creditBrake div:not(.arrow){padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.demandStrip span,.creditBrake span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:6px}
+.demandStrip b,.creditBrake b{display:block;font-size:18px;margin-bottom:6px}
+.demandStrip small,.creditBrake small{color:#6f6963;line-height:1.45}
+.creditBrake{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:12px;margin:22px 0}
+.creditBrake .arrow{font-size:26px;color:#6d28d9}
+@media(max-width:760px){.demandStrip{grid-template-columns:1fr}.creditBrake{grid-template-columns:1fr}.creditBrake .arrow{transform:rotate(90deg);text-align:center}}
+
+.method{margin-top:20px;padding:18px 20px;border-top:1px solid #e7e2da;background:#faf9f7;border-radius:10px;font-size:13px;line-height:1.55;color:#57514c}
+.method>b{display:block;color:#211d1a;font-size:14px;margin-bottom:5px}.method p{margin:6px 0}
+.scopeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.scopeGrid div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}.scopeGrid span{font-weight:800;color:#6d28d9}.scopeGrid b{display:block;font-size:18px;margin:5px 0}.scopeGrid small{color:#6f6963;line-height:1.45}
+@media(max-width:760px){.scopeGrid{grid-template-columns:1fr}}
+
+.chartQuestion{
+  margin:10px 0 18px;
+  padding:10px 14px;
+  border-left:3px solid #c9b6ef;
+  background:#faf8fd;
+  color:#4d4653;
+  font-size:14px;
+  line-height:1.45;
+}
+.tpContext{margin-top:22px}
+.tpContext h2{font-size:26px}
+.tpGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.tpBox{padding:17px 18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7;font-size:14px;line-height:1.5}
+.tpBox b{display:block;font-size:15px;margin-bottom:5px;color:#211d1a}
+.method p strong:first-child{color:#211d1a}
+@media(max-width:760px){.tpGrid{grid-template-columns:1fr}}
+
+
+.storyTransition{
+  margin:34px 0 22px;
+  padding:24px 28px;
+  border-radius:16px;
+  background:#f5f2ec;
+  border-top:4px solid #15803d;
+}
+.storyTransition .eyebrow{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#15803d;
+  margin-bottom:7px;
+}
+.storyTransition h2{margin:0 0 8px;font-size:25px}
+.storyTransition p{margin:0;color:#5f5952;line-height:1.5;max-width:850px}
+
+</style>
+
+<style>
+.flowrow{display:flex;align-items:stretch;gap:10px;margin:22px 0;flex-wrap:wrap}
+.flowbox{flex:1;min-width:150px;padding:16px;border:1px solid #e7e2da;border-radius:10px;background:#faf9f7;line-height:1.4}
+.arrow{display:flex;align-items:center;font-size:24px;color:#8f8f8f}
+
+.bigstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.bigstats div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.bigstats b{display:block;font-size:30px;color:#6d28d9}.bigstats span{font-size:13px;color:#6f6963}
+.sourceEmbed{height:500px;overflow:hidden;border:1px solid #e7e2da;border-radius:14px;margin:18px 0;background:white}
+.sourceEmbed iframe{width:100%;height:100%;border:0}
+.causalFlow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.causalFlow div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.causalFlow span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:7px}
+.causalFlow b{display:block;font-size:17px;margin-bottom:6px}.causalFlow small{color:#6f6963;line-height:1.4}
+@media(max-width:760px){.bigstats,.causalFlow{grid-template-columns:1fr}}
+
+.demandStrip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 22px}
+.demandStrip div,.creditBrake div:not(.arrow){padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.demandStrip span,.creditBrake span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:6px}
+.demandStrip b,.creditBrake b{display:block;font-size:18px;margin-bottom:6px}
+.demandStrip small,.creditBrake small{color:#6f6963;line-height:1.45}
+.creditBrake{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:12px;margin:22px 0}
+.creditBrake .arrow{font-size:26px;color:#6d28d9}
+@media(max-width:760px){.demandStrip{grid-template-columns:1fr}.creditBrake{grid-template-columns:1fr}.creditBrake .arrow{transform:rotate(90deg);text-align:center}}
+
+.method{margin-top:20px;padding:18px 20px;border-top:1px solid #e7e2da;background:#faf9f7;border-radius:10px;font-size:13px;line-height:1.55;color:#57514c}
+.method>b{display:block;color:#211d1a;font-size:14px;margin-bottom:5px}.method p{margin:6px 0}
+.scopeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.scopeGrid div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}.scopeGrid span{font-weight:800;color:#6d28d9}.scopeGrid b{display:block;font-size:18px;margin:5px 0}.scopeGrid small{color:#6f6963;line-height:1.45}
+@media(max-width:760px){.scopeGrid{grid-template-columns:1fr}}
+</style>
+
+<style>
+.origination-matrix{
+  display:grid;
+  grid-template-columns:1.35fr repeat(5,1fr);
+  gap:7px;
+  margin:24px 0 12px;
+  align-items:stretch;
+}
+.om-head{
+  font-size:12px;
+  font-weight:700;
+  text-align:center;
+  color:#555;
+  padding:7px 4px;
+}
+.om-row{
+  display:flex;
+  align-items:center;
+  font-weight:700;
+  font-size:13px;
+  padding:12px 8px;
+}
+.om-cell{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  font-size:22px;
+  font-weight:800;
+  border:1px solid #e7e2da;
+}
+.om-cell.flex{background:#ede9fe;color:#7c3aed}
+.om-cell.strong{background:#ddd6fe;color:#6d28d9}
+.om-cell.same{background:#f5f4f1;color:#999}
+.om-legend{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:11px;
+  color:#666;
+  margin:0 0 18px 0;
+}
+@media(max-width:760px){
+  .origination-matrix{grid-template-columns:1.25fr repeat(5,.8fr);gap:4px}
+  .om-row{font-size:11px;padding:8px 4px}
+  .om-cell{min-height:44px;font-size:18px}
+  .om-head{font-size:10px}
+}
+
+.bigstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.bigstats div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.bigstats b{display:block;font-size:30px;color:#6d28d9}.bigstats span{font-size:13px;color:#6f6963}
+.sourceEmbed{height:500px;overflow:hidden;border:1px solid #e7e2da;border-radius:14px;margin:18px 0;background:white}
+.sourceEmbed iframe{width:100%;height:100%;border:0}
+.causalFlow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.causalFlow div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.causalFlow span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:7px}
+.causalFlow b{display:block;font-size:17px;margin-bottom:6px}.causalFlow small{color:#6f6963;line-height:1.4}
+@media(max-width:760px){.bigstats,.causalFlow{grid-template-columns:1fr}}
+
+.demandStrip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 22px}
+.demandStrip div,.creditBrake div:not(.arrow){padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}
+.demandStrip span,.creditBrake span{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:6px}
+.demandStrip b,.creditBrake b{display:block;font-size:18px;margin-bottom:6px}
+.demandStrip small,.creditBrake small{color:#6f6963;line-height:1.45}
+.creditBrake{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:12px;margin:22px 0}
+.creditBrake .arrow{font-size:26px;color:#6d28d9}
+@media(max-width:760px){.demandStrip{grid-template-columns:1fr}.creditBrake{grid-template-columns:1fr}.creditBrake .arrow{transform:rotate(90deg);text-align:center}}
+
+.method{margin-top:20px;padding:18px 20px;border-top:1px solid #e7e2da;background:#faf9f7;border-radius:10px;font-size:13px;line-height:1.55;color:#57514c}
+.method>b{display:block;color:#211d1a;font-size:14px;margin-bottom:5px}.method p{margin:6px 0}
+.scopeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.scopeGrid div{padding:18px;border:1px solid #e7e2da;border-radius:12px;background:#faf9f7}.scopeGrid span{font-weight:800;color:#6d28d9}.scopeGrid b{display:block;font-size:18px;margin:5px 0}.scopeGrid small{color:#6f6963;line-height:1.45}
+@media(max-width:760px){.scopeGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<div class="kicker"></div>
+<h1>La suba de la mora en Argentina</h1>
+<p class="sub" style="max-width:900px">Objetivo: <b>describir la situación de la suba de la mora</b> identificando quiénes participan de la demanda de crédito, quiénes de la oferta y qué productos explican la expansión. </p>
+
+<p class="lead">La historia avanza desde el síntoma hacia su composición: primero identificamos dónde se concentra la mora, después qué pasó con el crédito y finalmente cómo se distribuyen bancos y PNFC dentro del fenómeno.</p>
+
+
+<section class="card tpContext">
+  <div class="sectionno">Marco del trabajo</div>
+  <h2>Qué queremos responder y para quién</h2>
+  <div class="tpGrid">
+    <div class="tpBox">
+      <b>Audiencia</b>
+      Nos dirigimos a una audiencia general interesada en economía y finanzas, sin necesidad de conocimiento técnico específico en riesgo crediticio. Por eso priorizamos comparaciones directas, escalas comunes, títulos que adelantan la lectura y poco ruido visual.
+    </div>
+    <div class="tpBox">
+      <b>Pregunta general</b>
+      ¿Cómo se configuró la suba de la mora en Argentina: en qué deudores se concentró, qué productos participaron de la expansión del crédito y qué lugar ocuparon bancos y PNFC?
+    </div>
+  </div>
+  <div class="tpGrid">
+    <div class="tpBox">
+      <b>Dataset 1 · Irregularidad y crédito bancario</b>
+      Series e informes del BCRA sobre mora por sector y producto, junto con saldos de crédito del sistema financiero.
+    </div>
+    <div class="tpBox">
+      <b>Dataset 2 · Central de Deudores</b>
+      Datos de personas en mora, distribución por monto adeudado y perfil de los distintos tipos de oferentes.
+    </div>
+    <div class="tpBox">
+      <b>Dataset 3 · Proveedores no financieros de crédito</b>
+      Series del BCRA para seguir la expansión del crédito otorgado por PNFC y compararla con la dinámica bancaria.
+    </div>
+    <div class="tpBox">
+      <b>Flujo narrativo</b>
+      Ordenamos la historia desde el síntoma hacia su composición: primero mostramos que la mora cambia, después identificamos quiénes y qué productos concentran el deterioro, luego reconstruimos la expansión previa del crédito y cerramos con el rol de la oferta.
+    </div>
+  </div>
+</section>
+
+<div class="storymap">
+  <div class="step active"><b>1. La mora sube</b>¿Es un problema viejo o cambió algo antes?</div>
+  <div class="step"><b>2. Boom de crédito</b>¿Hubo una expansión extraordinaria?</div>
+  <div class="step"><b>3. Quién tomó</b>Personas físicas y productos.</div>
+  <div class="step"><b>4. Por qué ocurrió</b>Demanda + oferta de crédito.</div>
+  <div class="step"><b>5. Mora con rezago</b>¿El deterioro aparece después?</div>
+  <div class="step"><b>6. Quién concentra</b>Productos, bancos y fintech.</div>
+</div>
+
+<section class="card">
+  <div class="sectionno">Acto 1 · El síntoma</div>
+  <h2>La mora dejó de ser estable y empezó a acelerarse en 2025</h2>
+  <p class="sub">Irregularidad del crédito al sector privado · % de la cartera · frecuencia trimestral</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿Cómo evolucionó la mora total y cuándo aparece el cambio de trayectoria?</p>
+  <div class="chart"><canvas id="total"></canvas></div>
+  <div class="insight">Entre dic-24 y jun-26 la mora total pasa de 1,6% a 7,6%.</div>
+  <div class="note">Fuente: BCRA. Serie trimestral. Eje Y común 0–14% para mantener consistencia con las comparaciones posteriores.</div>
+
+
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos una línea porque la pregunta es temporal y queremos mostrar tendencia y cambio de trayectoria. Consideramos barras, pero las descartamos porque para una serie temporal generan una vista escalonada artificial; en el material se propone justamente pasar de barras a línea cuando el interés principal es la tendencia a lo largo del tiempo.</p>
+<p><strong>Canales.</strong> Codificamos tiempo con posición horizontal y nivel de mora con posición vertical sobre una escala común. Priorizamos posición, siguiendo los experimentos de percepción de <strong>Cleveland y McGill (1984)</strong>.</p>
+<p><strong>Color.</strong> Usamos violeta como identidad de la mora en toda la presentación. El color funciona como atributo preatencional y concentra la atención sobre la variable protagonista.</p>
+<p><strong>Percepción.</strong> Aprovechamos <strong>continuidad</strong> de Gestalt para seguir la trayectoria y reducimos carga cognitiva eliminando cuadrículas y etiquetas innecesarias. Dejamos sólo los valores que sostienen la lectura principal.</p></div>
+
+</section>
+
+<section class="card">
+  <div class="sectionno">Acto 1 · Primer recorte</div>
+  <h2>El deterioro está concentrado en familias, no en empresas</h2>
+  <p class="sub">Irregularidad por tipo de deudor · % de la cartera · misma frecuencia y misma escala</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿El deterioro se concentra en familias o en empresas?</p>
+  <div class="chart"><canvas id="segments"></canvas></div>
+  <div class="insight">En jun-26 la mora de familias llega a <b>12,8%</b>, frente a <b>3,5%</b> en empresas. Esto convierte a los hogares en el protagonista de la historia y define qué tenemos que investigar a continuación.</div>
+  <div class="note">Fuente: BCRA. El salto de empresas en dic-23 tiene un comportamiento distinto y no explica la aceleración 2025–26 de la mora total.</div>
+
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos dos líneas sobre el mismo eje porque queremos comparar dos trayectorias en los mismos momentos. Consideramos separarlas en dos gráficos, pero lo descartamos porque dificultaría la comparación directa entre familias y empresas; el material muestra que poner líneas contra un mismo eje temporal mejora la comparación y reduce redundancia.</p>
+<p><strong>Canales.</strong> X codifica tiempo e Y irregularidad. La comparación principal ocurre por <strong>posición sobre una escala común</strong>, un canal de alta precisión en la jerarquía de Cleveland y McGill.</p>
+<p><strong>Color.</strong> Usamos violeta para familias, que es el foco de la historia, y gris para empresas como contexto. El contraste cromático jerarquiza sin introducir una categoría adicional.</p>
+<p><strong>Percepción.</strong> Mantenemos el mismo tipo de línea y la misma escala para que familias y empresas se entiendan como series comparables. Además, al conectar los puntos en el tiempo, facilitamos seguir la trayectoria de cada serie sin leer cada período como una observación aislada. Reducimos elementos secundarios para no agregar carga cognitiva.</p></div>
+</section>
+
+
+<section class="card">
+  <div class="sectionno">Acto 1 · Segundo recorte</div>
+  <h2>Dentro de los hogares, el deterioro se concentra en crédito de consumo</h2>
+  <p class="sub">Irregularidad por producto · % de cada cartera de familias · oct-24 a oct-25</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> Dentro de los hogares, ¿qué productos explican el mayor deterioro de la cartera?</p>
+  <div class="chart"><canvas id="products"></canvas></div>
+  <div class="insight"><b>Personales y tarjetas son los que cambian de régimen.</b> Entre oct-24 y oct-25 la mora de personales pasa de 3,4% a 9,9% y la de tarjetas de 1,7% a 7,7%. En cambio, hipotecarios permanece alrededor de 1% y prendarios aumenta mucho menos.</div>
+  <div class="note">Fuente: BCRA, Informe sobre Bancos. Serie mensual de irregularidad de familias por línea. Se corta en oct-25 en este gráfico porque son los valores mensuales exactos auditados hasta ahora; no se interpolan meses posteriores. El BCRA informa para mar-26: personales 14,2%, tarjetas 11,7%, prendarios 6,9% e hipotecarios 1,4%.</div>
+
+
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos líneas porque queremos comparar cómo cambian los productos mes a mes. Consideramos small multiples, pero los descartamos porque harían más difícil comparar los productos en un mismo momento; el material muestra este mismo problema y propone compartir el eje X para facilitar la comparación.</p>
+<p><strong>Canales.</strong> Tiempo se codifica por posición horizontal, irregularidad por posición vertical y producto mediante color/tono.</p>
+<p><strong>Color.</strong> Personales y tarjetas usan violetas relacionados porque son las series que concentran el deterioro; prendarios e hipotecarios quedan en gris. Aprovechamos el color como <strong>atributo preatencional</strong> para establecer foco.</p>
+<p><strong>Percepción.</strong> Usamos <strong>similitud</strong> para agrupar las dos series principales y reducimos competencia visual evitando etiquetas sobre las líneas grises.</p></div>
+
+</section>
+
+<section class="card">
+  <div class="sectionno">2 · Demanda · tamaño de las deudas</div>
+  <h2>Una gran parte de los morosos acumula montos relativamente bajos</h2>
+  <p class="sub">Personas en mora por tramos de $50.000 · $0 a $10 millones</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿Cómo se distribuyen los morosos según el monto de deuda en mora que acumulan?</p>
+
+  <div class="bigstats">
+    <div><b>17%</b><span>debe menos de $100 mil</span></div>
+    <div><b>≈25%</b><span>debe menos de $150 mil</span></div>
+    <div><b>≈40%</b><span>debe menos de un SMVM ($376.600)</span></div>
+  </div>
+
+  <div class="sourceEmbed">
+    <div class="chart-wrap" style="height:390px"><canvas id="histMora"></canvas></div>
+  </div>
+
+  <div class="insight"><b>El histograma completa la foto de la demanda.</b> No sólo sabemos que el deterioro se concentra en familias: también vemos que una parte importante de esas personas tiene deudas de montos bajos. El gráfico no informa el destino efectivo del préstamo, por lo que la lectura de “consumo cotidiano” se hace después, al combinarlo con el peso de tarjetas y préstamos personales.</div>
+
+  <div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos una distribución por intervalos de deuda porque la pregunta es dónde se concentra la cantidad de morosos y cómo se extiende la cola. Consideramos resumirla con algunas barras de cortes acumulados, pero lo descartamos porque perderíamos la forma completa de la distribución. Seguimos el criterio trabajado en la materia de elegir el formato a partir de la pregunta que queremos responder.</p>
+<p><strong>Canales.</strong> El monto adeudado se codifica por posición horizontal y la frecuencia de morosos por altura/posición vertical. Las referencias de pico, mediana y promedio agregan marcas puntuales sobre la misma escala.</p>
+<p><strong>Color.</strong> Conservamos violeta porque seguimos hablando de mora; el relleno suave separa figura y fondo sin crear nuevas categorías.</p>
+<p><strong>Percepción.</strong> Aplicamos <strong>figura–fondo</strong> y atributos preatencionales para destacar las referencias. Reducimos carga cognitiva eliminando elementos que no aportan a leer la forma general.</p>
+<p><strong>Limitación.</strong> La forma por tramos fue reconstruida de manera aproximada a partir del gráfico original; no tratamos las frecuencias de cada bin como valores exactos publicados.</p></div>
+
+  <div class="note">Fuente: “Todo lo que querías saber de la mora”, sobre BCRA Central de Deudores 202606. Se incrusta el histograma original porque la web no publica la tabla exacta de frecuencias de cada bin; no se reconstruyen ni interpolan barras.</div>
+</section>
+
+
+<section class="card">
+  <p class="question"><b>Pregunta que deja abierto el Acto 1:</b> si el deterioro se concentra en familias y, dentro de ellas, en personales y tarjetas, ¿es simplemente deuda vieja deteriorándose o fueron justamente esas líneas protagonistas de una expansión de crédito previa?</p>
+</section>
+
+
+<section class="card">
+  <div class="sectionno">Acto 2 · Lo que pasó antes</div>
+  <h2>El boom de crédito precedió al salto de la mora</h2>
+  <p class="sub">Crédito al sector privado en pesos: variación real interanual · Mora total: % de la cartera · frecuencia trimestral</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿La expansión del crédito ocurrió antes del salto de la mora?</p>
+  <div class="chart" style="height:380px"><canvas id="creditMora"></canvas></div>
+  <div class="insight"><b>El orden temporal es claro:</b> el crédito pasa de caer 31,9% real interanual en mar-24 a crecer 88,9% en mar-25. Durante gran parte de esa expansión la mora todavía se mantiene cerca de 2%. El deterioro se acelera después, cuando el crecimiento del crédito ya empieza a perder fuerza.</div>
+  <div class="note">Fuente: BCRA, Informes sobre Bancos. Crédito: saldo real al sector privado en pesos, variación interanual. Mora: irregularidad del crédito total al sector privado. Ambas series se muestran en cortes trimestrales. Se usan dos ejes porque las unidades son distintas; la comparación busca mostrar timing, no comparar magnitudes.</div>
+
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos una línea para mostrar la trayectoria del crédito y una referencia vertical para ubicar el comienzo de la aceleración de la mora. Consideramos barras, pero las descartamos porque el interés está en la evolución temporal y no en comparar períodos como categorías aisladas.</p>
+<p><strong>Canales.</strong> X codifica tiempo e Y variación real interanual del crédito. La línea vertical no representa una segunda métrica: funciona como referencia temporal.</p>
+<p><strong>Color.</strong> El crédito se identifica en verde y la referencia a mora en violeta, manteniendo la semántica cromática de toda la historia.</p>
+<p><strong>Percepción.</strong> La continuidad permite seguir la trayectoria y el contraste de color hace que la referencia temporal se detecte de manera preatencional sin competir con la serie.</p>
+<p><strong>Alternativa de escala.</strong> Un índice base 100 sería más intuitivo para leer acumulación del stock; mantenemos esta versión sólo mientras la pregunta sea sobre la aceleración interanual.</p></div>
+</section>
+
+
+
+
+<section class="card">
+  <div class="sectionno">2 · Principales participantes de la demanda</div>
+  <h2>El stock real de crédito creció con fuerza tanto en familias como en empresas</h2>
+  <p class="sub">Saldo real de crédito total · índice Jun-24 = 100</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿La expansión del crédito se concentró sólo en hogares o también alcanzó a empresas?</p>
+  <div class="chart" style="height:370px"><canvas id="familiasEmpresasStock"></canvas></div>
+  <div class="insight"><b>Ahora la lectura es directa:</b> las dos curvas suben porque el stock de crédito efectivamente se estaba acumulando. Entre sep-24 y mar-25 las familias crecieron más que las empresas: +38,5% real vs +31,3%.</div>
+  <div class="note">Fuente: BCRA, Informes sobre Bancos e Informe de Estabilidad Financiera junio de 2025. Jun-24 = 100. Jul, ago y sep se encadenan con las variaciones reales mensuales exactas publicadas por BCRA; mar-25 se calcula desde sep-24 aplicando el crecimiento acumulado exacto publicado para los seis meses siguientes. No se interpolan oct-24–feb-25.</div>
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos líneas con índice base 100 porque queremos comparar expansión relativa desde un mismo punto de partida. Consideramos mostrar los saldos absolutos, pero lo descartamos porque el distinto tamaño inicial de las carteras dominaría la comparación y desviaría la pregunta hacia niveles.</p>
+<p><strong>Canales.</strong> Tiempo se codifica en X y evolución relativa en Y. La escala común permite comparar posiciones directamente, consistente con la prioridad que Cleveland y McGill asignan a la posición.</p>
+<p><strong>Color.</strong> Verde identifica crédito. Familias queda destacado y empresas en gris como referencia para sostener la jerarquía del relato.</p>
+<p><strong>Percepción.</strong> Aprovechamos continuidad para seguir ambas trayectorias y reducimos carga cognitiva evitando cuadrículas y etiquetas sobre la serie secundaria.</p></div></section>
+<section class="card">
+  <div class="sectionno">3 · Qué productos se pidieron</div>
+  <h2>A diferencia de la mora, la expansión del crédito fue más amplia entre productos</h2>
+  <p class="sub">Stock real por producto · índice Ene-24 = 100 · frecuencia mensual</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿La expansión del crédito a hogares estuvo concentrada en personales y tarjetas, como ocurre con la mora?</p>
+  <div class="chart" style="height:430px"><canvas id="productosStock"></canvas></div>
+  <div class="insight">No. A diferencia de la mora, la expansión del crédito fue más amplia: también crecieron con fuerza los préstamos hipotecarios y prendarios. Personales y tarjetas no fueron los únicos productos relevantes del boom de crédito.</div>
+  <div class="note">Fuente: BCRA, archivo oficial Series.xlsm, hoja PRESTAMOS, series PM; INDEC, IPC nacional. Son saldos mensuales nominales deflactados por IPC y normalizados a Ene-24 = 100. No son originaciones nuevas: muestran stock acumulado.</div>
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos líneas indexadas a 100 porque queremos comparar cuánto se expandió cada producto desde un mismo punto de partida. Consideramos mostrar saldos absolutos, pero los descartamos porque las diferencias de tamaño inicial entre productos dificultarían comparar la intensidad de la expansión.</p>
+<p><strong>Canales.</strong> X representa tiempo, Y evolución real relativa y cada línea un producto. La comparación se apoya en posición sobre una escala común, priorizando un canal preciso para comparar magnitudes relativas.</p>
+<p><strong>Color.</strong> Usamos verde para identificar crédito y distintos niveles de intensidad para distinguir productos sin romper la identidad del bloque. No destacamos únicamente personales porque el mensaje de este gráfico es justamente que la expansión fue más amplia que la concentración observada en la mora.</p>
+<p><strong>Percepción.</strong> Aprovechamos la continuidad de las líneas para seguir la evolución de cada producto y reducimos etiquetas y cuadrículas para que las trayectorias puedan compararse sin ruido visual.</p></div></section>
+
+
+
+<section class="card">
+  <div class="sectionno">3 · Qué productos concentran la mora</div>
+  <h2>Los hogares concentran mucha más mora que crédito</h2>
+  <p class="sub">Participación en el crédito vs participación en el saldo irregular · familias y empresas · abril de 2026</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿El peso de hogares y empresas dentro del crédito es parecido a su peso dentro de la mora?</p>
+  <div class="chart" style="height:330px"><canvas id="actoresCreditoMora"></canvas></div>
+  <div class="insight"><b>Esta es la anomalía que tenemos que explicar.</b> Familias representan aproximadamente <b>45,8%</b> del crédito de estos dos segmentos, pero <b>75,6%</b> del saldo irregular estimado. Empresas muestran el patrón inverso: 54,2% del crédito y 24,4% de la mora.</div>
+  <div class="note">Fuente: BCRA, Informe sobre Bancos abril de 2026. El crédito a familias equivalía a 20,6% del activo y el de empresas a 24,4%; sus ratios de irregularidad eran 12,1% y 3,3%, respectivamente. Participación en crédito = saldo del segmento / suma familias+empresas. Participación en mora = (saldo × ratio de irregularidad) / suma del saldo irregular estimado de ambos segmentos. Cálculo directo a partir de datos publicados por BCRA.</div>
+
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos barras agrupadas porque comparamos magnitudes entre categorías en un mismo momento. Consideramos gráficos de torta, pero los descartamos: obligarían a comparar ángulos/áreas y además necesitaríamos más de una torta para contrastar crédito con mora. Preferimos longitud y posición, canales más precisos en la jerarquía de Cleveland y McGill.</p>
+<p><strong>Canales.</strong> La categoría se ubica en X, la magnitud se representa con longitud de barra y la métrica se distingue por color.</p>
+<p><strong>Color.</strong> Verde representa crédito y violeta mora. Repetimos esta codificación de manera consistente en todos los gráficos donde ambas métricas aparecen juntas.</p>
+<p><strong>Percepción.</strong> Aplicamos <strong>similitud</strong> para reconocer cada métrica por color y colocamos los porcentajes directamente sobre las barras para evitar el ida y vuelta entre eje y dato.</p></div>
+</section>
+
+<section class="card">
+  <div class="sectionno">3 · Dentro de los hogares</div>
+  <h2>Personales y tarjetas pesan todavía más en la mora que en el crédito</h2>
+  <p class="sub">Participación entre cuatro líneas seleccionadas · stock de crédito vs saldo irregular estimado · marzo de 2026</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿Los productos con más crédito también concentran una proporción similar de la mora?</p>
+  <div class="chart" style="height:390px"><canvas id="productosCreditoMora"></canvas></div>
+  <div class="insight"><b>Personales es el mayor desbalance:</b> representa 36,6% del stock de estas cuatro líneas, pero aproximadamente 48,2% del saldo irregular estimado. Tarjetas pasa de 39,8% del crédito a 43,2% de la mora. En cambio, hipotecarios pesa 12,9% del crédito y apenas 1,7% de la mora.</div>
+  <div class="note">Fuentes: BCRA, Series.xlsm oficial, hoja PRESTAMOS, saldos PM de marzo de 2026; BCRA, Informe sobre Bancos marzo de 2026, ratios de irregularidad: personales 14,2%, tarjetas 11,7%, prendarios 6,9%, hipotecarios 1,4%. El saldo irregular por producto se estima como stock × ratio de irregularidad. La comparación se restringe a estas cuatro líneas y no representa el 100% de todo el crédito a hogares.</div>
+<div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos barras agrupadas para comparar, producto por producto, participación en crédito versus participación en mora. Consideramos tortas separadas, pero las descartamos porque multiplicarían gráficos y obligarían a comparar ángulos entre paneles; longitud y posición permiten una lectura más precisa.</p>
+<p><strong>Canales.</strong> Producto se codifica por posición horizontal, porcentaje por longitud y métrica por color.</p>
+<p><strong>Color.</strong> Verde = crédito y violeta = mora. La repetición del código cromático reduce el esfuerzo de reaprender la leyenda.</p>
+<p><strong>Percepción.</strong> Aprovechamos <strong>similitud</strong> y proximidad dentro de cada grupo de barras. Mostramos los valores directamente y eliminamos el eje numérico para reducir carga cognitiva.</p></div></section>
+
+
+
+
+
+
+
+
+<section class="storyTransition">
+  <div class="eyebrow">De la demanda a la oferta</div>
+  <h2>Hasta acá miramos quién tomó crédito y qué productos eligió. Ahora cambiamos de lado: ¿quién lo otorgó?</h2>
+  <p>Pasamos de caracterizar a los deudores y los productos demandados a analizar la estructura de la oferta de crédito: bancos y proveedores no financieros de crédito (PNFC).</p>
+</section>
+<section class="card">
+  <div class="sectionno">4 · Principales participantes de la oferta</div>
+  <h2>La expansión del crédito a personas ocurrió en bancos y en PNFC</h2>
+  <p class="sub">Evolución mensual real indexada · Ene-24 = 100</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿La expansión del crédito a personas ocurrió sólo en bancos o también en PNFC?</p>
+  <div class="chart" style="height:410px"><canvas id="ofertaBancosPnfcScope"></canvas></div>
+  <div class="insight"><b>Los dos canales participan del boom.</b> Los PNFC muestran una expansión real sostenida desde mar-24; en paralelo, el crédito bancario de consumo también crece con fuerza. Por eso la oferta no se puede describir únicamente mirando bancos.</div>
+  <div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos líneas con índice base 100 para comparar la expansión relativa de bancos y PNFC. Consideramos saldos absolutos, pero los descartamos porque las carteras parten de tamaños muy diferentes y la comparación de niveles ocultaría la velocidad de expansión.</p>
+<p><strong>Canales.</strong> Tiempo se representa por posición horizontal y evolución relativa del stock por posición vertical sobre la misma escala.</p>
+<p><strong>Color.</strong> Usamos dos verdes porque ambas series representan oferta de crédito. La diferencia de intensidad permite distinguirlas sin romper la identidad semántica del bloque.</p>
+<p><strong>Percepción.</strong> Aplicamos <strong>continuidad</strong> para seguir ambas trayectorias y <strong>similitud</strong> para agruparlas conceptualmente. Quitamos cuadrículas para que los elementos secundarios no compitan con los datos.</p></div>
+  <div class="note">PNFC: BCRA, Series del Informe de Proveedores No Financieros de Crédito, noviembre 2025. Bancos: series reales mensuales de préstamos personales y tarjetas utilizadas en el análisis. Base Ene-24=100.</div>
+</section>
+
+<section class="card">
+  <div class="sectionno">4 · Oferta · personas y dinero</div>
+  <h2>Bancos y PNFC ocupan lugares distintos dentro de la mora</h2>
+  <p class="sub">Composición del monto en mora y de las personas con mora exclusiva · junio 2026</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿Bancos y PNFC tienen el mismo peso cuando miramos monto en mora y personas en mora?</p>
+  <div class="chart" style="height:350px"><canvas id="ofertaParticipacion"></canvas></div>
+  <div class="insight"><strong>Lectura:</strong> los bancos concentran mucha más parte del <strong>dinero en mora</strong>, mientras que los rubros PNFC tienen mucha más presencia entre las <strong>personas en mora</strong>. Esto sugiere perfiles distintos: tickets mayores en bancos y mayor alcance en cantidad de morosos en PNFC.</div>
+  <div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos barras horizontales agrupadas para comparar Bancos y PNFC en dos dimensiones distintas. Consideramos una barra 100% apilada o tortas, pero las descartamos porque la métrica de personas puede solaparse entre rubros y por lo tanto <strong>no constituye una partición aditiva del 100%</strong>.</p>
+<p><strong>Canales.</strong> Oferente se codifica por posición vertical, porcentaje por longitud y dimensión analizada por color. La longitud sobre una base común permite comparar magnitudes con precisión.</p>
+<p><strong>Color.</strong> Usamos dos violetas porque ambas métricas describen mora, diferenciando monto de personas mediante intensidad.</p>
+<p><strong>Percepción.</strong> Aplicamos <strong>similitud</strong> cromática para mantener ambas medidas dentro del mismo concepto y etiquetamos los porcentajes directamente al final de las barras, reduciendo carga cognitiva.</p>
+<p><strong>Limitación.</strong> “Personas en mora” mide presencia en los rubros de cada grupo; una misma persona puede aparecer en más de un rubro. No sumamos Bancos + PNFC ni interpretamos esos porcentajes como una partición del total.</p></div>
+  <div class="note">Fuente: Todo sobre la mora, BCRA Central de Deudores 202606. Monto: bancos = privado + público + provincial privatizado; PNFC = categorías no bancarias, excluyendo cartera en recupero. Personas: se usa “Exclusivas”, personas cuya única mora del sistema está en ese rubro; el resto incluye mora en más de un rubro. Esto evita sumar personas duplicadas.</div>
+</section>
+
+<section class="card">
+  <div class="sectionno">4 · Oferta · ticket y tasa de mora</div>
+  <h2>Los distintos oferentes muestran perfiles de riesgo y ticket muy diferentes</h2>
+  <p class="sub">X: mediana de deuda en mora · Y: tasa de mora por personas · tamaño: personas en mora</p>
+  <p class="chartQuestion"><strong>Pregunta:</strong> ¿Cómo se diferencian los oferentes en ticket, tasa de mora y cantidad de personas alcanzadas?</p>
+  <div class="chart" style="height:510px"><canvas id="ofertaBubble"></canvas></div>
+  <div class="insight"><b>El gráfico separa modelos de originación.</b> Los bancos se ubican en tickets más altos y tasas de mora más bajas; fintech y otros PNFC aparecen con tickets menores y, en varios casos, tasas más altas. Se excluye automotriz/maquinaria porque su mediana de $4,3 millones comprime la escala del resto.</div>
+  <div class="method"><b>Decisiones de visualización</b>
+<p><strong>Tipo de gráfico y alternativa descartada.</strong> Elegimos un gráfico de burbujas porque necesitamos representar simultáneamente ticket, tasa de mora y cantidad de personas. Consideramos barras, pero para incluir las tres variables necesitaríamos varios gráficos separados y perderíamos la relación entre ticket y mora en cada oferente.</p>
+<p><strong>Canales.</strong> X = mediana de deuda en mora; Y = tasa de mora; área de la burbuja = cantidad de personas; color = tipo de oferente. Reservamos <strong>posición X–Y</strong> para las dos variables que queremos comparar con mayor precisión y dejamos el área como canal secundario, consistente con la jerarquía de efectividad de Cleveland y McGill.</p>
+<p><strong>Color.</strong> El color agrupa banco versus PNFC antes de leer las etiquetas individuales. Lo usamos con función categórica, no como escala cuantitativa.</p>
+<p><strong>Percepción.</strong> Aprovechamos <strong>proximidad</strong> para detectar oferentes con perfiles semejantes y <strong>similitud</strong> para reconocer rápidamente los dos grupos. El tamaño funciona como atributo preatencional para identificar dónde se concentra más cantidad de personas.</p>
+<p><strong>Limitación visual.</strong> Excluimos automotriz/maquinaria del panel porque su ticket es un outlier que comprime la escala del resto; esa exclusión se explicita debajo del gráfico.</p></div>
+  <div class="note">Fuente: Todo sobre la mora, BCRA Central de Deudores 202606. Se excluye “cartera en recupero” porque por definición está casi toda en mora y automotriz/maquinaria por ser un outlier de ticket que perjudica la lectura del resto.</div>
+</section>
+
+<section class="card">
+  <p class="question"><b>Pregunta que deja abierto el Acto 4:</b> si el boom alcanzó a empresas y hogares, pero el deterioro quedó desproporcionadamente concentrado en hogares —y dentro de ellos en crédito de consumo—, ¿qué fue distinto en <b>quién les prestó, a quiénes llegó ese crédito y bajo qué condiciones</b>?</p>
+</section>
+
+
+
+
+
+
+<section class="card scope-end">
+  <div class="sectionno">Cierre · descripción de la situación</div>
+  <h2>Lo que ya podemos describir</h2>
+  <div class="scopeGrid">
+    <div><span>1</span><b>La mora cambia de régimen y se concentra en hogares</b><small>El deterioro se acelera desde 2025 y la diferencia frente a empresas es marcada.</small></div>
+    <div><span>2</span><b>El núcleo está en crédito de consumo</b><small>Personales y tarjetas combinan expansión previa del crédito con un peso desproporcionado dentro de la mora.</small></div>
+    <div><span>3</span><b>La oferta no es homogénea</b><small>Bancos y PNFC participaron de la expansión, pero muestran perfiles distintos en monto, cantidad de morosos y ticket.</small></div>
+  </div>
+  <div class="insight"><strong>Siguiente pregunta:</strong> ¿qué evidencia permite hacer una inferencia prudente sobre por qué estos deudores dejaron de poder solventar sus obligaciones?</div>
+</section>
+</main>
+<script>
+const labels=["Mar-22", "Jun-22", "Sep-22", "Dic-22", "Mar-23", "Jun-23", "Sep-23", "Dic-23", "Mar-24", "Jun-24", "Sep-24", "Dic-24", "Mar-25", "Jun-25", "Sep-25", "Dic-25", "Mar-26", "Jun-26"];
+const common={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:14,ticks:{callback:v=>v+'%'},grid:{color:'#e7e2da'}}}};
+
+const etiquetaExtremosMora = {
+  id: 'etiquetaExtremosMora',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea} = chart;
+    const ds = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
+    const labels = chart.data.labels;
+    const puntos = [
+      {i: labels.indexOf('Sep-24'), texto: '1,6%', align: 'left'},
+      {i: labels.indexOf('Jun-26'), texto: '7,6%', align: 'right'}
+    ];
+    ctx.save();
+    ctx.font = '600 12px Arial';
+    ctx.fillStyle = '#6d28d9';
+    puntos.forEach(p => {
+      if (p.i < 0 || !meta.data[p.i]) return;
+      const el = meta.data[p.i];
+      ctx.beginPath();
+      ctx.arc(el.x, el.y, 4.5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.textBaseline='bottom';
+      if (p.align === 'right') {
+        ctx.textAlign='right';
+        ctx.fillText(p.texto, Math.min(chartArea.right, el.x), el.y-9);
+      } else {
+        ctx.textAlign='left';
+        ctx.fillText(p.texto, Math.max(chartArea.left, el.x), el.y-9);
+      }
+    });
+    ctx.restore();
+  }
+};
+
+
+const etiquetasPorcentajeBarras = {
+  id:'etiquetasPorcentajeBarras',
+  afterDatasetsDraw(chart){
+    if(chart.config.type !== 'bar') return;
+    const {ctx}=chart;
+    ctx.save();
+    ctx.fillStyle='#44403c';
+    ctx.font='600 12px sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='bottom';
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      meta.data.forEach((bar,i)=>{
+        const v=ds.data[i];
+        if(v===null || v===undefined || Number.isNaN(Number(v))) return;
+        if(chart.options.indexAxis==='y'){
+          ctx.textAlign='left';
+          ctx.textBaseline='middle';
+          ctx.fillText(String(v).replace('.',',')+'%', bar.x+7, bar.y);
+          ctx.textAlign='center';
+          ctx.textBaseline='bottom';
+        } else {
+          ctx.fillText(String(v).replace('.',',')+'%', bar.x, bar.y-6);
+        }
+      });
+    });
+    ctx.restore();
+  }
+};
+Chart.register(etiquetasPorcentajeBarras);
+
+
+const histMoraGuia = {
+  id:'histMoraGuia',
+  afterDatasetsDraw(chart){
+    if(chart.canvas.id!=='histMora') return;
+    const {ctx,chartArea,scales}=chart;
+    const x=scales.x, y=scales.y;
+    ctx.save();
+
+    // Peak annotation
+    const px=x.getPixelForValue(50000), py=y.getPixelForValue(10.8);
+    ctx.fillStyle='#6d28d9';
+    ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
+    ctx.font='600 12px sans-serif';
+    ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText('pico: 50–100k', px+18, py+2);
+
+    // Reference markers from the source.
+    [
+      [900000,'mediana = 900k'],
+      [3000000,'promedio = 3M']
+    ].forEach(([v,label])=>{
+      const xx=x.getPixelForValue(v);
+      ctx.strokeStyle='#c4b5fd'; ctx.lineWidth=1;
+      ctx.setLineDash([5,5]);
+      ctx.beginPath(); ctx.moveTo(xx,chartArea.top); ctx.lineTo(xx,chartArea.bottom); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#78716c'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+      ctx.fillText(label,xx,chartArea.top-9);
+    });
+    ctx.restore();
+  }
+};
+Chart.register(histMoraGuia);
+
+new Chart(document.getElementById('histMora'),{
+  type:'line',
+  data:{
+    datasets:[{
+      label:'% de morosos',
+      data:[{'x': 0, 'y': 6.8}, {'x': 50000, 'y': 10.8}, {'x': 100000, 'y': 4.7}, {'x': 150000, 'y': 3.4}, {'x': 200000, 'y': 2.8}, {'x': 250000, 'y': 2.5923}, {'x': 300000, 'y': 2.4}, {'x': 350000, 'y': 2.1515}, {'x': 400000, 'y': 1.9287}, {'x': 450000, 'y': 1.729}, {'x': 500000, 'y': 1.55}, {'x': 550000, 'y': 1.4338}, {'x': 600000, 'y': 1.3264}, {'x': 650000, 'y': 1.227}, {'x': 700000, 'y': 1.1351}, {'x': 750000, 'y': 1.05}, {'x': 800000, 'y': 0.9894}, {'x': 850000, 'y': 0.9323}, {'x': 900000, 'y': 0.8785}, {'x': 950000, 'y': 0.8278}, {'x': 1000000, 'y': 0.78}, {'x': 1050000, 'y': 0.743}, {'x': 1100000, 'y': 0.7078}, {'x': 1150000, 'y': 0.6743}, {'x': 1200000, 'y': 0.6423}, {'x': 1250000, 'y': 0.6119}, {'x': 1300000, 'y': 0.5829}, {'x': 1350000, 'y': 0.5553}, {'x': 1400000, 'y': 0.5289}, {'x': 1450000, 'y': 0.5039}, {'x': 1500000, 'y': 0.48}, {'x': 1550000, 'y': 0.4637}, {'x': 1600000, 'y': 0.448}, {'x': 1650000, 'y': 0.4328}, {'x': 1700000, 'y': 0.4182}, {'x': 1750000, 'y': 0.404}, {'x': 1800000, 'y': 0.3903}, {'x': 1850000, 'y': 0.3771}, {'x': 1900000, 'y': 0.3643}, {'x': 1950000, 'y': 0.3519}, {'x': 2000000, 'y': 0.34}, {'x': 2050000, 'y': 0.3311}, {'x': 2100000, 'y': 0.3224}, {'x': 2150000, 'y': 0.314}, {'x': 2200000, 'y': 0.3058}, {'x': 2250000, 'y': 0.2978}, {'x': 2300000, 'y': 0.29}, {'x': 2350000, 'y': 0.2824}, {'x': 2400000, 'y': 0.275}, {'x': 2450000, 'y': 0.2678}, {'x': 2500000, 'y': 0.2608}, {'x': 2550000, 'y': 0.2539}, {'x': 2600000, 'y': 0.2473}, {'x': 2650000, 'y': 0.2408}, {'x': 2700000, 'y': 0.2345}, {'x': 2750000, 'y': 0.2284}, {'x': 2800000, 'y': 0.2224}, {'x': 2850000, 'y': 0.2166}, {'x': 2900000, 'y': 0.2109}, {'x': 2950000, 'y': 0.2054}, {'x': 3000000, 'y': 0.2}, {'x': 3050000, 'y': 0.1957}, {'x': 3100000, 'y': 0.1916}, {'x': 3150000, 'y': 0.1875}, {'x': 3200000, 'y': 0.1835}, {'x': 3250000, 'y': 0.1796}, {'x': 3300000, 'y': 0.1758}, {'x': 3350000, 'y': 0.172}, {'x': 3400000, 'y': 0.1683}, {'x': 3450000, 'y': 0.1648}, {'x': 3500000, 'y': 0.1612}, {'x': 3550000, 'y': 0.1578}, {'x': 3600000, 'y': 0.1544}, {'x': 3650000, 'y': 0.1512}, {'x': 3700000, 'y': 0.1479}, {'x': 3750000, 'y': 0.1448}, {'x': 3800000, 'y': 0.1417}, {'x': 3850000, 'y': 0.1387}, {'x': 3900000, 'y': 0.1357}, {'x': 3950000, 'y': 0.1328}, {'x': 4000000, 'y': 0.13}, {'x': 4050000, 'y': 0.1276}, {'x': 4100000, 'y': 0.1253}, {'x': 4150000, 'y': 0.123}, {'x': 4200000, 'y': 0.1208}, {'x': 4250000, 'y': 0.1186}, {'x': 4300000, 'y': 0.1164}, {'x': 4350000, 'y': 0.1143}, {'x': 4400000, 'y': 0.1122}, {'x': 4450000, 'y': 0.1102}, {'x': 4500000, 'y': 0.1082}, {'x': 4550000, 'y': 0.1062}, {'x': 4600000, 'y': 0.1043}, {'x': 4650000, 'y': 0.1024}, {'x': 4700000, 'y': 0.1005}, {'x': 4750000, 'y': 0.0987}, {'x': 4800000, 'y': 0.0969}, {'x': 4850000, 'y': 0.0951}, {'x': 4900000, 'y': 0.0934}, {'x': 4950000, 'y': 0.0917}, {'x': 5000000, 'y': 0.09}, {'x': 5050000, 'y': 0.0885}, {'x': 5100000, 'y': 0.0871}, {'x': 5150000, 'y': 0.0857}, {'x': 5200000, 'y': 0.0843}, {'x': 5250000, 'y': 0.083}, {'x': 5300000, 'y': 0.0816}, {'x': 5350000, 'y': 0.0803}, {'x': 5400000, 'y': 0.079}, {'x': 5450000, 'y': 0.0777}, {'x': 5500000, 'y': 0.0765}, {'x': 5550000, 'y': 0.0753}, {'x': 5600000, 'y': 0.074}, {'x': 5650000, 'y': 0.0728}, {'x': 5700000, 'y': 0.0717}, {'x': 5750000, 'y': 0.0705}, {'x': 5800000, 'y': 0.0694}, {'x': 5850000, 'y': 0.0683}, {'x': 5900000, 'y': 0.0672}, {'x': 5950000, 'y': 0.0661}, {'x': 6000000, 'y': 0.065}, {'x': 6050000, 'y': 0.0638}, {'x': 6100000, 'y': 0.0627}, {'x': 6150000, 'y': 0.0615}, {'x': 6200000, 'y': 0.0604}, {'x': 6250000, 'y': 0.0593}, {'x': 6300000, 'y': 0.0582}, {'x': 6350000, 'y': 0.0572}, {'x': 6400000, 'y': 0.0561}, {'x': 6450000, 'y': 0.0551}, {'x': 6500000, 'y': 0.0541}, {'x': 6550000, 'y': 0.0531}, {'x': 6600000, 'y': 0.0521}, {'x': 6650000, 'y': 0.0512}, {'x': 6700000, 'y': 0.0502}, {'x': 6750000, 'y': 0.0493}, {'x': 6800000, 'y': 0.0484}, {'x': 6850000, 'y': 0.0476}, {'x': 6900000, 'y': 0.0467}, {'x': 6950000, 'y': 0.0458}, {'x': 7000000, 'y': 0.045}, {'x': 7050000, 'y': 0.0441}, {'x': 7100000, 'y': 0.0432}, {'x': 7150000, 'y': 0.0423}, {'x': 7200000, 'y': 0.0415}, {'x': 7250000, 'y': 0.0407}, {'x': 7300000, 'y': 0.0398}, {'x': 7350000, 'y': 0.039}, {'x': 7400000, 'y': 0.0383}, {'x': 7450000, 'y': 0.0375}, {'x': 7500000, 'y': 0.0367}, {'x': 7550000, 'y': 0.036}, {'x': 7600000, 'y': 0.0353}, {'x': 7650000, 'y': 0.0346}, {'x': 7700000, 'y': 0.0339}, {'x': 7750000, 'y': 0.0332}, {'x': 7800000, 'y': 0.0325}, {'x': 7850000, 'y': 0.0319}, {'x': 7900000, 'y': 0.0312}, {'x': 7950000, 'y': 0.0306}, {'x': 8000000, 'y': 0.03}, {'x': 8050000, 'y': 0.0292}, {'x': 8100000, 'y': 0.0285}, {'x': 8150000, 'y': 0.0278}, {'x': 8200000, 'y': 0.0271}, {'x': 8250000, 'y': 0.0264}, {'x': 8300000, 'y': 0.0257}, {'x': 8350000, 'y': 0.0251}, {'x': 8400000, 'y': 0.0245}, {'x': 8450000, 'y': 0.0238}, {'x': 8500000, 'y': 0.0232}, {'x': 8550000, 'y': 0.0227}, {'x': 8600000, 'y': 0.0221}, {'x': 8650000, 'y': 0.0215}, {'x': 8700000, 'y': 0.021}, {'x': 8750000, 'y': 0.0205}, {'x': 8800000, 'y': 0.0199}, {'x': 8850000, 'y': 0.0194}, {'x': 8900000, 'y': 0.0189}, {'x': 8950000, 'y': 0.0185}, {'x': 9000000, 'y': 0.018}, {'x': 9050000, 'y': 0.0173}, {'x': 9100000, 'y': 0.0166}, {'x': 9150000, 'y': 0.0159}, {'x': 9200000, 'y': 0.0153}, {'x': 9250000, 'y': 0.0147}, {'x': 9300000, 'y': 0.0141}, {'x': 9350000, 'y': 0.0136}, {'x': 9400000, 'y': 0.013}, {'x': 9450000, 'y': 0.0125}, {'x': 9500000, 'y': 0.012}, {'x': 9550000, 'y': 0.0115}, {'x': 9600000, 'y': 0.0111}, {'x': 9650000, 'y': 0.0106}, {'x': 9700000, 'y': 0.0102}, {'x': 9750000, 'y': 0.0098}, {'x': 9800000, 'y': 0.0094}, {'x': 9850000, 'y': 0.009}, {'x': 9900000, 'y': 0.0087}, {'x': 9950000, 'y': 0.0083}, {'x': 10000000, 'y': 0.008}],
+      parsing:false,
+      borderColor:'#6d28d9',
+      backgroundColor:'rgba(109,40,217,.12)',
+      fill:true,
+      borderWidth:2.5,
+      pointRadius:0,
+      tension:.18
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    layout:{padding:{top:28,right:12}},
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        title:items=>'$'+Math.round(items[0].parsed.x/1000)+' mil',
+        label:item=>'≈ '+item.parsed.y.toFixed(2).replace('.',',')+'% de morosos'
+      }}
+    },
+    scales:{
+      x:{
+        type:'linear',min:0,max:10000000,
+        grid:{display:false},
+        border:{display:true,color:'#78716c',width:1},
+        ticks:{
+          stepSize:1000000,
+          maxRotation:0,minRotation:0,
+          callback:v=>v===0?'$0':'$'+(v/1000000)+' M'
+        },
+        title:{display:true,text:'Deuda en mora de la persona'}
+      },
+      y:{display:false,min:0,max:12}
+    }
+  }
+});
+
+new Chart(document.getElementById('total'),{
+ type:'line',
+ plugins:[etiquetaExtremosMora],
+ data:{
+   labels,
+   datasets:[{
+     label:'Mora total',
+     data:[3.9,3.2,3.1,3.1,3.2,3.0,3.0,3.7,1.9,1.8,1.6,1.6,2.0,2.9,4.2,5.5,7.0,7.6],
+     borderColor:'#6d28d9',
+     backgroundColor:'#6d28d9',
+     borderWidth:4,
+     pointRadius:(ctx)=>[10,17].includes(ctx.dataIndex)?5:2,
+     pointHoverRadius:5,
+     tension:.18
+   }]
+ },
+ options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   layout:{padding:{top:26,right:18}},
+   plugins:{legend:{display:false}},
+   scales:{
+     x:{
+       grid:{display:false},
+       ticks:{
+         maxRotation:0,
+         minRotation:0,
+         autoSkip:false,
+         font:{size:10}
+       },
+       border:{display:true,color:'#78716c',width:1}
+     },
+     y:{
+       min:0,max:14,
+       ticks:{callback:v=>v+'%',maxTicksLimit:5},
+       grid:{display:false},
+       border:{display:false}
+     }
+   }
+ }
+});
+
+const etiquetaSegmentosMora = {
+  id: 'etiquetaSegmentosMora',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea} = chart;
+    const labels = chart.data.labels;
+    const puntos = [
+      {datasetIndex:0, i:labels.indexOf('Sep-24'), texto:'2,6%', color:'#6d28d9', align:'left'},
+      {datasetIndex:0, i:labels.indexOf('Jun-26'), texto:'12,8%', color:'#6d28d9', align:'right'},
+      {datasetIndex:1, i:labels.indexOf('Sep-24'), texto:'0,7%', color:'#78716c', align:'left'},
+      {datasetIndex:1, i:labels.indexOf('Jun-26'), texto:'3,5%', color:'#78716c', align:'right'}
+    ];
+    ctx.save();
+    ctx.font='600 11px Arial';
+    ctx.textBaseline='bottom';
+    puntos.forEach(p=>{
+      if(p.i<0) return;
+      const el=chart.getDatasetMeta(p.datasetIndex).data[p.i];
+      if(!el) return;
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(el.x,el.y,4.2,0,Math.PI*2); ctx.fill();
+      ctx.textAlign=p.align==='right'?'right':'left';
+      const x=p.align==='right'?Math.min(chartArea.right,el.x):Math.max(chartArea.left,el.x);
+      ctx.fillText(p.texto,x,el.y-8);
+    });
+    ctx.restore();
+  }
+};
+
+new Chart(document.getElementById('segments'),{
+ type:'line',
+ plugins:[etiquetaSegmentosMora],
+ data:{labels,datasets:[
+   {label:'Familias',data:[3.7,3.2,3.0,3.0,3.3,3.3,3.1,2.8,2.7,2.8,2.6,2.5,3.3,5.2,7.3,9.3,11.5,12.8],borderColor:'#6d28d9',backgroundColor:'#6d28d9',borderWidth:4,pointRadius:(ctx)=>[10,17].includes(ctx.dataIndex)?5:2,tension:.18},
+   {label:'Empresas',data:[4.2,3.3,3.2,3.3,3.2,2.9,3.0,4.4,1.3,1.0,0.7,0.8,0.9,1.1,1.7,2.5,3.1,3.5],borderColor:'#9a9a9a',backgroundColor:'#9a9a9a',borderWidth:3,pointRadius:(ctx)=>[10,17].includes(ctx.dataIndex)?4:2,tension:.18}
+ ]},
+ options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   layout:{padding:{top:24,right:18}},
+   plugins:{legend:{display:true,position:'top',align:'end'}},
+   scales:{
+     x:{
+       grid:{display:false},
+       ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:10}},
+       border:{display:true,color:'#78716c',width:1}
+     },
+     y:{
+       min:0,max:14,
+       ticks:{callback:v=>v+'%',maxTicksLimit:5},
+       grid:{display:false},
+       border:{display:false}
+     }
+   }
+ }
+});
+
+const prodLabels=['Oct-24','Nov-24','Dic-24','Ene-25','Feb-25','Mar-25','Abr-25','May-25','Jun-25','Jul-25','Ago-25','Sep-25','Oct-25'];
+
+const etiquetaProductosMora = {
+  id: 'etiquetaProductosMora',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea} = chart;
+    const ultimo = chart.data.labels.length - 1;
+    const etiquetas = [
+      {datasetIndex:0, texto:'9,9%', color:'#9333ea'},
+      {datasetIndex:1, texto:'7,7%', color:'#c084fc'}
+    ];
+    ctx.save();
+    ctx.font='600 11px Arial';
+    ctx.textAlign='right';
+    ctx.textBaseline='bottom';
+    etiquetas.forEach(p=>{
+      const el=chart.getDatasetMeta(p.datasetIndex).data[ultimo];
+      if(!el) return;
+      ctx.fillStyle=p.color;
+      ctx.beginPath();
+      ctx.arc(el.x,el.y,4.2,0,Math.PI*2);
+      ctx.fill();
+      ctx.fillText(p.texto, Math.min(chartArea.right,el.x), el.y-8);
+    });
+    ctx.restore();
+  }
+};
+
+new Chart(document.getElementById('products'),{
+ type:'line',
+ plugins:[etiquetaProductosMora],
+ data:{labels:prodLabels,datasets:[
+   {label:'Personales',data:[3.4,3.4,3.3,3.5,3.7,4.1,4.6,5.6,6.5,7.2,8.2,9.1,9.9],borderColor:'#9333ea',backgroundColor:'#9333ea',borderWidth:4,pointRadius:(ctx)=>ctx.dataIndex===12?5:2,tension:.15},
+   {label:'Tarjetas',data:[1.7,1.8,1.9,2.0,2.4,2.8,3.2,4.2,4.9,5.3,6.7,7.4,7.7],borderColor:'#c084fc',backgroundColor:'#c084fc',borderWidth:4,pointRadius:(ctx)=>ctx.dataIndex===12?5:2,tension:.15},
+   {label:'Prendarios',data:[3.7,3.6,3.6,3.5,3.5,3.5,3.5,3.6,3.7,3.9,4.3,4.5,4.8],borderColor:'#9a9a9a',backgroundColor:'#9a9a9a',borderWidth:2.5,pointRadius:(ctx)=>ctx.dataIndex===12?4:1.5,tension:.15},
+   {label:'Hipotecarios',data:[1.0,1.0,1.0,1.0,0.9,0.9,0.9,1.0,1.0,0.9,0.9,0.9,1.0],borderColor:'#c5c5c5',backgroundColor:'#c5c5c5',borderWidth:2.5,pointRadius:(ctx)=>ctx.dataIndex===12?4:1.5,tension:.15}
+ ]},
+ options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   layout:{padding:{top:24,right:18}},
+   plugins:{legend:{display:true,position:'top',align:'end'}},
+   scales:{
+     x:{
+       grid:{display:false},
+       ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:10}},
+       border:{display:true,color:'#78716c',width:1}
+     },
+     y:{
+       min:0,max:14,
+       ticks:{callback:v=>v+'%',maxTicksLimit:5},
+       grid:{display:false},
+       border:{display:false}
+     }
+   }
+ }
+});
+
+
+const act2Labels=['Mar-24','Jun-24','Sep-24','Dic-24','Mar-25','Jun-25','Sep-25','Dic-25','Mar-26','Jun-26'];
+
+const marcaMarzo2025CreditoMora = {
+  id: 'marcaMarzo2025CreditoMora',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea:{top,bottom}, scales:{x}} = chart;
+    const idx = chart.data.labels.indexOf('Mar-25');
+    if (idx < 0) return;
+    const px = x.getPixelForValue(idx);
+    ctx.save();
+    ctx.strokeStyle = '#6d28d9';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(px, top);
+    ctx.lineTo(px, bottom);
+    ctx.stroke();
+    ctx.fillStyle = '#6d28d9';
+    ctx.font = '600 11px Arial';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('La mora empieza a acelerarse', px + 6, top + 6);
+    ctx.restore();
+  }
+};
+
+new Chart(document.getElementById('creditMora'),{
+ type:'line',
+ plugins:[marcaMarzo2025CreditoMora],
+ data:{labels:act2Labels,datasets:[
+   {
+     label:'Crédito real en pesos · var. i.a.',
+     data:[-31.9,-20.6,5.8,49.4,88.9,78.1,47.0,27.4,13.2,2.6],
+     borderColor:'#0f766e',
+     backgroundColor:'#0f766e',
+     borderWidth:4,
+     pointRadius:2,
+     pointHoverRadius:5,
+     tension:.18
+   }
+ ]},
+ options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   layout:{padding:{top:24,right:18}},
+   plugins:{legend:{display:false}},
+   scales:{
+     x:{
+       grid:{display:false},
+       ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:10}},
+       border:{display:true,color:'#78716c',width:1}
+     },
+     y:{
+       min:-40,max:100,
+       title:{display:true,text:'Crédito real · variación i.a.'},
+       ticks:{callback:v=>v+'%',maxTicksLimit:6},
+       grid:{display:false},
+       border:{display:false}
+     }
+   }
+ }
+});
+
+
+
+
+
+
+
+
+
+
+const etiquetaDemandaCredito = {
+  id:'etiquetaDemandaCredito',
+  afterDatasetsDraw(chart){
+    const {ctx,chartArea}=chart;
+    const ultimo=chart.data.labels.length-1;
+    const meta=chart.getDatasetMeta(0);
+    const el=meta.data[ultimo];
+    if(!el) return;
+    ctx.save();
+    ctx.fillStyle='#15803d';
+    ctx.beginPath(); ctx.arc(el.x,el.y,4.5,0,Math.PI*2); ctx.fill();
+    ctx.font='600 11px Arial';
+    ctx.textAlign='right'; ctx.textBaseline='bottom';
+    ctx.fillText('170,5',Math.min(chartArea.right,el.x),el.y-8);
+    ctx.restore();
+  }
+};
+
+new Chart(document.getElementById('familiasEmpresasStock'),{
+  type:'line',
+  plugins:[etiquetaDemandaCredito],
+  data:{
+    labels:["Jun-24","Jul-24","Ago-24","Sep-24","Mar-25"],
+    datasets:[
+      {
+        label:'Familias',
+        data:[100.0,109.1,115.0,123.1,170.5],
+        borderColor:'#15803d',
+        backgroundColor:'#15803d',
+        borderWidth:4,
+        pointRadius:(ctx)=>ctx.dataIndex===4?5:2,
+        tension:.15
+      },
+      {
+        label:'Empresas',
+        data:[100.0,107.1,114.1,119.1,156.4],
+        borderColor:'#9a9a9a',
+        backgroundColor:'#9a9a9a',
+        borderWidth:3,
+        pointRadius:2,
+        tension:.15
+      }
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    layout:{padding:{top:24,right:18}},
+    plugins:{legend:{display:true,position:'top',align:'end'}},
+    scales:{
+      x:{
+        grid:{display:false},
+        ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:10}},
+        border:{display:true,color:'#78716c',width:1}
+      },
+      y:{
+        min:90,
+        title:{display:true,text:'Índice real · Jun-24 = 100'},
+        ticks:{maxTicksLimit:5},
+        grid:{display:false},
+        border:{display:false}
+      }
+    }
+  }
+});
+
+
+const etiquetaProductosCredito = {
+  id:'etiquetaProductosCredito',
+  afterDatasetsDraw(chart){}
+};
+
+new Chart(document.getElementById('productosStock'),{
+  type:'line',
+  plugins:[etiquetaProductosCredito],
+  data:{
+    labels:["Ene-24","Feb-24","Mar-24","Abr-24","May-24","Jun-24","Jul-24","Ago-24","Sep-24","Oct-24","Nov-24","Dic-24","Ene-25","Feb-25","Mar-25","Abr-25","May-25","Jun-25","Jul-25","Ago-25","Sep-25","Oct-25","Nov-25","Dic-25","Ene-26","Feb-26","Mar-26","Abr-26","May-26","Jun-26"],
+    datasets:[
+      {
+        label:'Préstamos personales',
+        data:[100.0,95.9,94.6,96.3,109.0,126.3,144.5,170.0,194.9,220.2,244.2,265.7,287.6,314.2,331.4,352.7,371.7,383.9,389.7,401.5,405.1,404.7,401.6,396.5,393.6,392.6,387.8,385.2,380.7,376.2],
+        borderColor:'#15803d',
+        backgroundColor:'#15803d',
+        borderWidth:4,
+        pointRadius:(ctx)=>ctx.dataIndex===29?5:2,
+        tension:.15
+      },
+      {
+        label:'Tarjetas',
+        data:[100.0,96.9,92.1,90.0,96.0,98.7,105.0,116.5,122.0,131.5,144.9,151.8,157.9,159.8,160.2,163.4,171.2,170.8,170.1,179.5,174.4,179.1,177.0,178.1,176.6,169.6,165.2,166.0,165.4,162.4],
+        borderColor:'#86a98a',
+        backgroundColor:'#86a98a',
+        borderWidth:3,
+        pointRadius:1.5,
+        tension:.15
+      },
+      {
+        label:'Prendarios',
+        data:[100.0,90.0,86.9,83.0,82.8,91.1,104.2,125.1,137.9,149.6,162.2,174.9,184.5,192.1,196.6,208.1,223.9,234.9,241.7,248.6,255.9,258.1,253.8,248.0,241.2,242.5,236.7,234.9,232.1,231.2],
+        borderColor:'#9a9a9a',
+        backgroundColor:'#9a9a9a',
+        borderWidth:2.5,
+        pointRadius:1.4,
+        tension:.15
+      },
+      {
+        label:'Hipotecarios',
+        data:[100.0,88.9,79.6,72.3,69.6,68.0,70.2,76.5,87.9,105.7,129.5,154.6,175.0,191.4,208.7,232.4,259.9,291.6,322.9,352.4,383.4,414.4,436.7,447.7,456.4,462.2,463.4,464.1,465.1,470.9],
+        borderColor:'#c9c9c9',
+        backgroundColor:'#c9c9c9',
+        borderWidth:2.5,
+        pointRadius:1.4,
+        tension:.15
+      }
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    layout:{padding:{top:24,right:18}},
+    plugins:{legend:{display:true,position:'top',align:'end'}},
+    scales:{
+      x:{
+        grid:{display:false},
+        ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:9}},
+        border:{display:true,color:'#78716c',width:1}
+      },
+      y:{
+        min:50,
+        title:{display:true,text:'Índice real · Ene-24 = 100'},
+        ticks:{maxTicksLimit:5},
+        grid:{display:false},
+        border:{display:false}
+      }
+    }
+  }
+});
+
+
+new Chart(document.getElementById('actoresCreditoMora'),{
+  type:'bar',
+  data:{
+    labels:['Familias','Empresas'],
+    datasets:[
+      {label:'Participación en crédito',data:[45.8,54.2],backgroundColor:'#15803d',borderRadius:5},
+      {label:'Participación en mora',data:[75.6,24.4],backgroundColor:'#6d28d9',borderRadius:5}
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{position:'top',align:'end'}},
+    scales:{
+      x:{
+        grid:{display:false},
+        border:{display:true,color:'#78716c',width:1}
+      },
+      y:{display:false,beginAtZero:true,max:100}
+    }
+  }
+});
+
+new Chart(document.getElementById('productosCreditoMora'),{
+  type:'bar',
+  data:{
+    labels:['Personales','Tarjetas','Prendarios','Hipotecarios'],
+    datasets:[
+      {label:'Participación en crédito',data:[36.6,39.8,10.7,12.9],backgroundColor:'#15803d',borderRadius:5},
+      {label:'Participación en mora',data:[48.2,43.2,6.9,1.7],backgroundColor:'#6d28d9',borderRadius:5}
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{position:'top',align:'end'}},
+    scales:{
+      x:{
+        grid:{display:false},
+        border:{display:true,color:'#78716c',width:1}
+      },
+      y:{display:false,beginAtZero:true,max:60}
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const bubbles=[{"x": 1.458, "y": 16.9, "r": 26, "label": "Banco privado"}, {"x": 1.406, "y": 14.5, "r": 21.143165325939254, "label": "Banco p\u00fablico"}, {"x": 0.687, "y": 25.4, "r": 19.656099307848443, "label": "TC no bancaria"}, {"x": 0.181, "y": 21.9, "r": 25.069110873742613, "label": "Fintech / billetera"}, {"x": 1.207, "y": 8.6, "r": 10.227281163632885, "label": "Banco prov. privatizado"}, {"x": 0.468, "y": 52.1, "r": 14.210931003984221, "label": "Cr\u00e9dito r\u00e1pido no bancario"}, {"x": 4.309, "y": 4.6, "r": 6, "label": "Automotriz / maquinaria"}, {"x": 0.672, "y": 41.7, "r": 9.697096472656133, "label": "Retail electro / hogar"}, {"x": 0.807, "y": 30.8, "r": 9.700758733212572, "label": "Tarjeta supermercado"}, {"x": 0.309, "y": 32.2, "r": 6, "label": "Otro no bancario"}, {"x": 0.325, "y": 31.0, "r": 6.0153470390327435, "label": "Mutual / cooperativa"}];
+
+const bubbleData=[{"x": 1.458, "y": 16.9, "r": 25, "label": "Banco privado", "cat": "Banco"}, {"x": 1.406, "y": 14.5, "r": 21.143165325939254, "label": "Banco p\u00fablico", "cat": "Banco"}, {"x": 1.207, "y": 8.6, "r": 10.227281163632885, "label": "Banco prov. privatizado", "cat": "Banco"}, {"x": 0.687, "y": 25.4, "r": 19.656099307848443, "label": "TC no bancaria", "cat": "PNFC"}, {"x": 0.181, "y": 21.9, "r": 25, "label": "Fintech / billetera", "cat": "PNFC"}, {"x": 0.468, "y": 52.1, "r": 14.210931003984221, "label": "Cr\u00e9dito r\u00e1pido no bancario", "cat": "PNFC"}, {"x": 0.672, "y": 41.7, "r": 9.697096472656133, "label": "Retail electro / hogar", "cat": "PNFC"}, {"x": 0.807, "y": 30.8, "r": 9.700758733212572, "label": "Tarjeta supermercado", "cat": "PNFC"}, {"x": 0.309, "y": 32.2, "r": 6, "label": "Otro no bancario", "cat": "PNFC"}, {"x": 0.325, "y": 31.0, "r": 6.0153470390327435, "label": "Mutual / cooperativa", "cat": "PNFC"}];
+
+
+
+
+new Chart(document.getElementById('ofertaBancosPnfcScope'),{
+ type:'line',
+ data:{labels:["Ene-24","Feb-24","Mar-24","Abr-24","May-24","Jun-24","Jul-24","Ago-24","Sep-24","Oct-24","Nov-24","Dic-24","Ene-25","Feb-25","Mar-25","Abr-25","May-25","Jun-25","Jul-25"],datasets:[
+   {label:'Bancos · consumo seleccionado',data:[100.0,96.4,93.3,93.2,102.5,112.5,124.8,143.2,158.4,175.8,194.6,208.8,222.8,237.0,245.8,258.1,271.4,277.4,279.9],borderColor:'#15803d',backgroundColor:'#15803d',borderWidth:4,pointRadius:2,tension:.18},
+   {label:'PNFC · cartera total',data:[100.0,98.7,97.8,100.1,108.3,113.1,120.9,131.2,140.4,154.0,167.4,177.1,186.9,193.2,197.3,204.7,213.7,217.7,222.7],borderColor:'#86a98a',backgroundColor:'#86a98a',borderWidth:3,pointRadius:2,tension:.18}
+ ]},
+ options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   interaction:{mode:'index',intersect:false},
+   plugins:{legend:{position:'top',align:'end'}},
+   scales:{
+     x:{
+       grid:{display:false},
+       ticks:{maxRotation:0,minRotation:0,autoSkip:false,font:{size:9}},
+       border:{display:true,color:'#78716c',width:1}
+     },
+     y:{
+       title:{display:true,text:'Saldo real indexado (Ene-24 = 100)'},
+       ticks:{maxTicksLimit:5},
+       grid:{display:false},
+       border:{display:false}
+     }
+   }
+ }
+});
+
+new Chart(document.getElementById('ofertaParticipacion'),{
+  type:'bar',
+  data:{
+    labels:['Bancos','PNFC'],
+    datasets:[
+      {
+        label:'Monto en mora',
+        data:[66.3,29.8],
+        backgroundColor:'#6d28d9',
+        borderRadius:5
+      },
+      {
+        label:'Personas en mora*',
+        data:[42.8,91.2],
+        backgroundColor:'#c4b5fd',
+        borderRadius:5
+      }
+    ]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true,
+    maintainAspectRatio:false,
+    layout:{padding:{right:48}},
+    plugins:{
+      legend:{position:'top',align:'end'},
+      tooltip:{callbacks:{
+        afterBody:function(items){
+          return items[0].datasetIndex===1
+            ? '* Presencia de morosos en rubros del grupo / total de morosos. Puede haber solapamiento entre rubros.'
+            : 'Participación sobre el monto total en mora del sistema.';
+        }
+      }}
+    },
+    scales:{
+      x:{display:false,beginAtZero:true,max:100},
+      y:{
+        grid:{display:false},
+        border:{display:true,color:'#78716c',width:1},
+        ticks:{font:{size:12}}
+      }
+    }
+  }
+});
+
+const ofertaBubbleData=[{"x": 1.458, "y": 16.9, "r": 16.1, "label": "Banco privado", "cat": "Banco"}, {"x": 1.406, "y": 14.5, "r": 11.5, "label": "Banco p\u00fablico", "cat": "Banco"}, {"x": 1.207, "y": 8.6, "r": 6, "label": "Banco prov. privatizado", "cat": "Banco"}, {"x": 0.687, "y": 25.4, "r": 14.1, "label": "TC no bancaria", "cat": "PNFC"}, {"x": 0.181, "y": 21.9, "r": 16.8, "label": "Fintech / billetera", "cat": "PNFC"}, {"x": 0.468, "y": 52.1, "r": 14.7, "label": "Cr\u00e9dito r\u00e1pido no bancario", "cat": "PNFC"}, {"x": 0.672, "y": 41.7, "r": 8.9, "label": "Retail electro / hogar", "cat": "PNFC"}, {"x": 0.807, "y": 30.8, "r": 7.7, "label": "Tarjeta supermercado", "cat": "PNFC"}, {"x": 0.309, "y": 32.2, "r": 6, "label": "Otro no bancario", "cat": "PNFC"}, {"x": 0.325, "y": 31.0, "r": 6, "label": "Mutual / cooperativa", "cat": "PNFC"}];
+new Chart(document.getElementById('ofertaBubble'),{
+ type:'bubble',
+ data:{datasets:ofertaBubbleData.map(d=>({label:d.label,data:[{x:d.x,y:d.y,r:d.r}],backgroundColor:d.cat==='Banco'?'rgba(109,40,217,.64)':'rgba(120,113,108,.48)',borderColor:d.cat==='Banco'?'#6d28d9':'#78716c',borderWidth:1.4}))},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': mediana $'+c.raw.x.toFixed(3)+' M · mora '+c.raw.y+'%'}}},scales:{x:{min:0,max:1.7,title:{display:true,text:'Mediana de deuda en mora ($ millones)'},grid:{color:'#e7e2da'}},y:{beginAtZero:true,max:60,ticks:{callback:v=>v+'%'},title:{display:true,text:'Tasa de mora por personas'},grid:{color:'#e7e2da'}}}}
+});
+
+</script>
+</body>
+</html>
